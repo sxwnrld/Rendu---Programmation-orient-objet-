@@ -1,0 +1,11 @@
+# IDE / éditeurs
+.idea/
+.vscode/
+*.swp
+
+# Système
+.DS_Store
+Thumbs.db
+
+# Dépendances (si Composer est utilisé un jour)
+/vendor/

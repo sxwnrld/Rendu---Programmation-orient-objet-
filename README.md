@@ -1,1 +1,60 @@
-# Rendu---Programmation-orient-objet-
+# Agence de location de véhicules — PHP Orienté Objet
+
+Évaluation **PHP OO, PDO & MVC** : cœur applicatif d'une agence qui loue des
+voitures, des utilitaires et des vélos électriques.
+
+## Auteurs
+
+| Nom | Prénom |
+| --- | ------ |
+| _NOM_ | _Prénom_ |
+| _NOM_ | _Prénom_ |
+
+## Prérequis
+
+- PHP **8.1 ou supérieur** (promotion des propriétés du constructeur,
+  type de retour `static`, `final` sur les classes et méthodes).
+- Aucune dépendance externe : un autoloader PSR-4 maison est fourni
+  ([autoload.php](autoload.php)).
+
+## Lancer le projet
+
+```bash
+# Serveur de développement intégré à PHP
+php -S localhost:8000
+
+# puis ouvrir http://localhost:8000 dans le navigateur
+```
+
+## Organisation du projet
+
+```text
+.
+├── index.php                  # Scénario de démonstration
+├── autoload.php               # Autoloader PSR-4 (App\ => src/) + fuseau horaire
+├── assets/style.css           # Mise en forme des cartes et de la page
+├── data/                      # Fichier de sauvegarde de l'agence
+├── tests/run.php              # Tests unitaires légers (sans PHPUnit)
+└── src/
+    ├── Interfaces/
+    │   ├── Louable.php        # louer() / rendre() / estDisponible()
+    │   └── Entretenable.php   # ajouterKilometres() / besoinEntretien() / entretenir()
+    ├── Traits/
+    │   ├── HistoriqueTrait.php  # Journal horodaté des évènements
+    │   └── EntretienTrait.php   # Implémentation commune de Entretenable
+    ├── Utils/
+    │   └── Format.php         # Formatage des prix et échappement HTML
+    └── Vehicules/
+        ├── Vehicule.php       # Classe abstraite (TVA, compteur, location)
+        ├── Voiture.php        # Supplément > 5 places, entretien à 15 000 km
+        ├── Utilitaire.php     # Frais de nettoyage, entretien à 10 000 km
+        └── VeloElectrique.php # Classe finale, -20 % dès 7 jours
+```
+
+## Avancement
+
+- [x] Fondations : `Louable`, `Entretenable`, `HistoriqueTrait`, `Vehicule`
+- [x] Véhicules : `Voiture`, `Utilitaire`, `VeloElectrique`
+- [ ] Clients et locations : `Client`, `Location`
+- [ ] Agence : `Agence` (location, retour, chiffre d'affaires, sauvegarde)
+- [ ] Scénario complet dans `index.php`
