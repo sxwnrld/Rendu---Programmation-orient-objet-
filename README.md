@@ -40,7 +40,7 @@ php tests/run.php
   lui-même (`ajouterHistorique()` est `protected`).
 - **`louer()` est `final`** : la règle commune (TVA, arrondi, passage en
   indisponible, historique) est figée ; chaque véhicule ne personnalise que
-  `calculerPrixHT()` (patron *méthode modèle*).
+  `calculerPrixHT()` (patron _méthode modèle_).
 - **`EntretienTrait`** factorise l'implémentation de `Entretenable`, identique
   pour `Voiture` et `Utilitaire` à l'exception du seuil
   (`static::SEUIL_ENTRETIEN`).
