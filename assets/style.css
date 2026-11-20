@@ -1,0 +1,216 @@
+/* ==========================================================================
+   Agence de location — feuille de style de la page de démonstration
+   ========================================================================== */
+
+:root {
+    --fond: #f4f5f7;
+    --surface: #ffffff;
+    --texte: #1d2330;
+    --texte-doux: #5d6577;
+    --bordure: #e1e4ea;
+    --accent: #2f5bea;
+    --succes: #1f8a4c;
+    --succes-fond: #e6f5ec;
+    --echec: #c2353a;
+    --echec-fond: #fbe9ea;
+    --info-fond: #eaf0fe;
+    --rayon: 12px;
+    --ombre: 0 1px 2px rgb(16 24 40 / 6%), 0 4px 12px rgb(16 24 40 / 6%);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --fond: #12151c;
+        --surface: #1b1f29;
+        --texte: #e7e9ee;
+        --texte-doux: #9aa2b4;
+        --bordure: #2b3140;
+        --accent: #7d9bff;
+        --succes: #5fd394;
+        --succes-fond: #173325;
+        --echec: #ff7b80;
+        --echec-fond: #3a1d20;
+        --info-fond: #1d2742;
+        --ombre: none;
+    }
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--fond);
+    color: var(--texte);
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 16px 64px;
+}
+
+/* --- En-tête ------------------------------------------------------------ */
+
+.page__entete h1 {
+    margin: 0 0 4px;
+    font-size: 1.9rem;
+}
+
+.page__entete p {
+    margin: 0;
+    color: var(--texte-doux);
+}
+
+/* --- Étapes du scénario ------------------------------------------------- */
+
+.etape {
+    margin-top: 28px;
+    padding: 20px 24px;
+    background: var(--surface);
+    border: 1px solid var(--bordure);
+    border-radius: var(--rayon);
+    box-shadow: var(--ombre);
+}
+
+.etape h2 {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin: 0 0 16px;
+    font-size: 1.2rem;
+}
+
+.etape__numero {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.etape--a-venir {
+    border-style: dashed;
+    color: var(--texte-doux);
+    box-shadow: none;
+}
+
+/* --- Messages ----------------------------------------------------------- */
+
+.message {
+    margin: 8px 0;
+    padding: 10px 14px;
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+    background: var(--info-fond);
+}
+
+.message--succes {
+    border-color: var(--succes);
+    background: var(--succes-fond);
+}
+
+.message--echec {
+    border-color: var(--echec);
+    background: var(--echec-fond);
+}
+
+.chiffre-cle {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+/* --- Cartes véhicules (générées par Vehicule::__toString()) ------------- */
+
+.parc {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+}
+
+.vehicule {
+    padding: 16px;
+    border: 1px solid var(--bordure);
+    border-radius: var(--rayon);
+    background: var(--fond);
+}
+
+.vehicule__entete {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.vehicule__type {
+    color: var(--texte-doux);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.vehicule__nom {
+    margin: 8px 0 12px;
+    font-size: 1.1rem;
+}
+
+.vehicule__details {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.92rem;
+}
+
+.vehicule__details li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 4px 0;
+    border-top: 1px solid var(--bordure);
+}
+
+.vehicule__details span {
+    color: var(--texte-doux);
+}
+
+.badge {
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.badge--disponible {
+    background: var(--succes-fond);
+    color: var(--succes);
+}
+
+.badge--loue {
+    background: var(--echec-fond);
+    color: var(--echec);
+}
+
+/* --- Historique (généré par HistoriqueTrait::afficherHistorique()) ------ */
+
+.historique {
+    margin: 0;
+    padding-left: 20px;
+    font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+    font-size: 0.88rem;
+}
+
+.historique__vide {
+    color: var(--texte-doux);
+    list-style: none;
+}

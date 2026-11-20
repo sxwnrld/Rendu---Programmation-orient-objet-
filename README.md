@@ -26,6 +26,34 @@ php -S localhost:8000
 # puis ouvrir http://localhost:8000 dans le navigateur
 ```
 
+```bash
+# Tests unitaires (code de sortie 0 si tout passe)
+php tests/run.php
+```
+
+## Choix de conception
+
+- **Encapsulation** : les propriétés sont `private` sauf `tarifJournalier`
+  (`protected`, utilisé par les enfants pour calculer le prix). La
+  disponibilité ne peut changer que via `louer()` / `rendre()` (setter
+  `protected`), et l'historique ne peut être alimenté que par l'objet
+  lui-même (`ajouterHistorique()` est `protected`).
+- **`louer()` est `final`** : la règle commune (TVA, arrondi, passage en
+  indisponible, historique) est figée ; chaque véhicule ne personnalise que
+  `calculerPrixHT()` (patron *méthode modèle*).
+- **`EntretienTrait`** factorise l'implémentation de `Entretenable`, identique
+  pour `Voiture` et `Utilitaire` à l'exception du seuil
+  (`static::SEUIL_ENTRETIEN`).
+- **Validation** : chaque setter vérifie sa donnée et lève une
+  `InvalidArgumentException` explicite. Les propriétés propres aux enfants
+  sont validées **avant** l'appel au constructeur parent, afin qu'un véhicule
+  invalide ne soit jamais comptabilisé dans `nbVehicules`.
+- **Historique** : `__CLASS__` dans un trait vaut la classe qui l'utilise
+  (`Vehicule`) ; on utilise donc `static::class` pour afficher la classe
+  réelle (`Voiture`, `Utilitaire`...).
+- **Sécurité** : toutes les valeurs insérées dans du HTML sont échappées
+  (`Format::html()`).
+
 ## Organisation du projet
 
 ```text
