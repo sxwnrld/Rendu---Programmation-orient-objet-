@@ -4,9 +4,6 @@
 voitures, des utilitaires et des vélos électriques.
 
 ## Auteurs
-
-| Nom | Prénom |
-
 | _Sawwan_ |
 
 
