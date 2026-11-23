@@ -1,85 +1,129 @@
-# Agence de location de véhicules — PHP Orienté Objet
+# Agence de location de véhicules
 
-Évaluation **PHP OO, PDO & MVC** : cœur applicatif d'une agence qui loue des
-voitures, des utilitaires et des vélos électriques.
+Projet PHP orienté objet réalisé en binôme.
 
 ## Auteurs
-| _Sawwan_ et _Ruben_|
 
+- Ruben Sitbon
+- Sawwan [NOM DE FAMILLE À COMPLÉTER AVANT LE RENDU]
 
-## Prérequis
+## Installation
 
-- PHP **8.1 ou supérieur** (promotion des propriétés du constructeur,
-  type de retour `static`, `final` sur les classes et méthodes).
-- Aucune dépendance externe : un autoloader PSR-4 maison est fourni
-  ([autoload.php](autoload.php)).
+PHP 8.1 ou supérieur suffit. Il n'y a ni dépendance Composer, ni base de données à installer.
 
-## Lancer le projet
+Depuis le dossier du projet :
 
 ```bash
-# Serveur de développement intégré à PHP
 php -S localhost:8000
-
-# puis ouvrir http://localhost:8000 dans le navigateur
 ```
 
+Ouvrir ensuite http://localhost:8000 dans un navigateur.
+
+Pour lancer les tests :
+
 ```bash
-# Tests unitaires (code de sortie 0 si tout passe)
 php tests/run.php
+```
+
+Le résultat attendu est `52 test(s) réussi(s), 0 échec(s).` Un échec donne un code de sortie égal à 1.
+
+## Scénario
+
+La page `index.php` exécute et affiche les neuf étapes du sujet :
+
+1. Création d'une agence, de deux voitures dont une de sept places, d'un utilitaire et d'un vélo électrique.
+2. Affichage du compteur de véhicules.
+3. Affichage des cartes du parc avec `echo $vehicule`.
+4. Création de deux clients et refus d'un troisième avec un email invalide.
+5. Location de la voiture sept places pour trois jours, du vélo pour huit jours et refus d'une double location.
+6. Retour de la voiture avec 16 000 km et refus de location avant entretien.
+7. Entretien, puis nouvelle location de la voiture pour trois jours.
+8. Affichage des locations, du chiffre d'affaires et de l'historique.
+9. Sauvegarde de l'agence dans `data/agence.txt`, puis relecture de contrôle.
+
+Chaque chargement de la page rejoue une démonstration neuve et remplace cette sauvegarde. Il ne s'agit pas d'un formulaire de gestion persistant.
+
+### Montants attendus
+
+| Location | Calcul TTC | Montant |
+| --- | --- | --- |
+| Renault Espace, 3 jours | (32 + 10) × 3 × 1,20 | 151,20 € |
+| Vélo électrique, 8 jours | 15 × 8 × 0,80 × 1,20 | 115,20 € |
+| Renault Espace après entretien, 3 jours | (32 + 10) × 3 × 1,20 | 151,20 € |
+| Total | | 417,60 € |
+
+Les tentatives refusées ne créent aucune location et ne changent pas le chiffre d'affaires.
+
+## Organisation
+
+```text
+.
+├── index.php
+├── autoload.php
+├── assets/style.css
+├── data/
+│   └── agence.txt
+├── tests/
+│   ├── run.php
+│   └── complement.php
+└── src/
+    ├── Agence.php
+    ├── Clients/Client.php
+    ├── Locations/Location.php
+    ├── Interfaces/
+    │   ├── Louable.php
+    │   └── Entretenable.php
+    ├── Traits/
+    │   ├── HistoriqueTrait.php
+    │   └── EntretienTrait.php
+    ├── Utils/Format.php
+    └── Vehicules/
+        ├── Vehicule.php
+        ├── Voiture.php
+        ├── Utilitaire.php
+        └── VeloElectrique.php
 ```
 
 ## Choix de conception
 
-- **Encapsulation** : les propriétés sont `private` sauf `tarifJournalier`
-  (`protected`, utilisé par les enfants pour calculer le prix). La
-  disponibilité ne peut changer que via `louer()` / `rendre()` (setter
-  `protected`), et l'historique ne peut être alimenté que par l'objet
-  lui-même (`ajouterHistorique()` est `protected`).
-- **`louer()` est `final`** : la règle commune (TVA, arrondi, passage en
-  indisponible, historique) est figée ; chaque véhicule ne personnalise que
-  `calculerPrixHT()` (patron _méthode modèle_).
-- **`EntretienTrait`** factorise l'implémentation de `Entretenable`, identique
-  pour `Voiture` et `Utilitaire` à l'exception du seuil
-  (`static::SEUIL_ENTRETIEN`).
-- **Validation** : chaque setter vérifie sa donnée et lève une
-  `InvalidArgumentException` explicite. Les propriétés propres aux enfants
-  sont validées **avant** l'appel au constructeur parent, afin qu'un véhicule
-  invalide ne soit jamais comptabilisé dans `nbVehicules`.
-- **Historique** : `__CLASS__` dans un trait vaut la classe qui l'utilise
-  (`Vehicule`) ; on utilise donc `static::class` pour afficher la classe
-  réelle (`Voiture`, `Utilitaire`...).
-- **Sécurité** : toutes les valeurs insérées dans du HTML sont échappées
-  (`Format::html()`).
+- L'autoloader associe le namespace `App\` au dossier `src/`.
+- `Vehicule::louer()` est finale. Les enfants définissent seulement le calcul HT et le type de véhicule.
+- Les propriétés sont privées, sauf le tarif journalier, protégé pour les calculs des enfants. Le setter de disponibilité reste protégé pour passer par les méthodes de location et de retour.
+- Le trait `EntretienTrait` regroupe la logique d'entretien des voitures et utilitaires. Les seuils restent propres à chaque classe.
+- `HistoriqueTrait` utilise `date()` pour l'horodatage. `__CLASS__` identifie la classe qui utilise le trait ; `static::class` permet d'afficher le type concret lorsque le trait est hérité.
+- `Client` valide son email avec `filter_var()`. `Location` conserve le montant TTC facturé et une date au format `AAAA-MM-JJ`.
+- L'agence refuse les immatriculations en double, les durées invalides, les véhicules loués et ceux qui nécessitent un entretien.
+- `getVehiculesDisponibles()` retourne les véhicules réellement louables : libres et sans entretien en attente.
+- Les retours répétés ne comptent pas deux fois les kilomètres. Les kilomètres négatifs sont refusés avant de modifier le véhicule.
+- `getChiffreAffaires()` additionne toutes les locations enregistrées, y compris celles déjà rendues.
+- La sérialisation conserve les relations entre clients, véhicules et locations, ainsi que l'historique. Le compteur statique compte les constructions pendant l'exécution courante ; un chargement ne rappelle pas les constructeurs.
+- Les valeurs affichées en HTML sont échappées avec `Format::html()`.
 
-## Organisation du projet
+## Sauvegarde
 
-```text
-.
-├── index.php                  # Scénario de démonstration
-├── autoload.php               # Autoloader PSR-4 (App\ => src/) + fuseau horaire
-├── assets/style.css           # Mise en forme des cartes et de la page
-├── data/                      # Fichier de sauvegarde de l'agence
-├── tests/run.php              # Tests unitaires légers (sans PHPUnit)
-└── src/
-    ├── Interfaces/
-    │   ├── Louable.php        # louer() / rendre() / estDisponible()
-    │   └── Entretenable.php   # ajouterKilometres() / besoinEntretien() / entretenir()
-    ├── Traits/
-    │   ├── HistoriqueTrait.php  # Journal horodaté des évènements
-    │   └── EntretienTrait.php   # Implémentation commune de Entretenable
-    ├── Utils/
-    │   └── Format.php         # Formatage des prix et échappement HTML
-    └── Vehicules/
-        ├── Vehicule.php       # Classe abstraite (TVA, compteur, location)
-        ├── Voiture.php        # Supplément > 5 places, entretien à 15 000 km
-        ├── Utilitaire.php     # Frais de nettoyage, entretien à 10 000 km
-        └── VeloElectrique.php # Classe finale, -20 % dès 7 jours
+Le chemin `/data/agence.txt` du sujet est interprété comme le dossier `data` à la racine du projet, et non à la racine du système. Le chemin utilisé est `__DIR__ . '/data/agence.txt'`.
+
+Le dossier `data/` doit être accessible en écriture par PHP. Une erreur lisible est affichée si la sauvegarde est impossible. Pour charger une sauvegarde depuis un autre script :
+
+```php
+require __DIR__ . '/autoload.php';
+
+$agence = App\Agence::charger(__DIR__ . '/data/agence.txt');
 ```
 
-## Avancement
+Ne charger que les fichiers locaux produits par l'application. `unserialize()` n'est pas un format d'import de fichiers provenant de tiers. Une liste de classes autorisées et des contrôles de structure sont appliqués au chargement.
 
-- [x] Fondations : `Louable`, `Entretenable`, `HistoriqueTrait`, `Vehicule`
-- [x] Véhicules : `Voiture`, `Utilitaire`, `VeloElectrique`
-- [ ] Clients et locations : `Client`, `Location`
-- [ ] Agence : `Agence` (location, retour, chiffre d'affaires, sauvegarde)
-- [ ] Scénario complet dans `index.php`
+## Vérifications
+
+Les tests couvrent les fondations, les prix, les seuils d'entretien, les clients, les dates, les refus de location, les retours, le chiffre d'affaires et la sauvegarde/relecture. Ils vérifient aussi les erreurs de fichier et la conservation des références après restauration.
+
+Le projet a été exécuté avec PHP 8.1.2, sans dépendance, avec les erreurs PHP activées. Le rendu des neuf étapes a été vérifié dans Chrome en largeur ordinateur et mobile.
+
+## Avant le rendu GitHub
+
+- Compléter le nom de famille de Sawwan dans ce README.
+- Rejouer `php tests/run.php` et ouvrir la page dans l'environnement de rendu.
+- Vérifier les droits d'écriture du dossier `data/`.
+- Déposer les fichiers dans le dépôt du binôme et donner l'accès au formateur `yoanncoualan`, conformément au sujet. Cette archive ne modifie aucun dépôt à distance.
+
+Consignes : https://docs.yoanncoualan.com/php-pdo-mvc/evaluations/a2-cdi
