@@ -212,6 +212,8 @@ tester('Prix HT : sans réduction sous 7 jours', fn (): bool =>
 tester('Prix HT : -20 % à partir de 7 jours', fn (): bool =>
     (new VeloElectrique('AB-123-CD', 'Moustache', 'Samedi', 15, 80))->calculerPrixHT(8) === 96.0, $bilan);
 
+require __DIR__ . '/complement.php';
+
 echo PHP_EOL . sprintf('%d test(s) réussi(s), %d échec(s).', $bilan['ok'], $bilan['ko']) . PHP_EOL;
 
 exit($bilan['ko'] === 0 ? 0 : 1);
