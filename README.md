@@ -4,7 +4,7 @@
 voitures, des utilitaires et des vélos électriques.
 
 ## Auteurs
-| _Sawwan_ |
+| _Sawwan_ et _Ruben_|
 
 
 ## Prérequis
