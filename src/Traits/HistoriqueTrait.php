@@ -67,19 +67,15 @@ trait HistoriqueTrait
     }
 
     /**
-     * Nom court (sans namespace) de la classe à afficher dans l'historique.
-     *
-     * Remarque : __CLASS__ est résolu à la compilation. Dans un trait, il vaut
-     * le nom de la classe qui utilise le trait — ici la classe abstraite
-     * Vehicule — et afficherait donc « Vehicule » pour tous les véhicules.
-     * static::class désigne, lui, la classe réelle de l'objet (Voiture,
-     * Utilitaire...), ce qui produit le format attendu « Voiture : message ».
+     * __CLASS__ donne la classe qui utilise le trait (Vehicule).
+     * Pour un enfant, static::class conserve son nom concret dans le journal.
      */
     private function getNomClasseHistorique(): string
     {
-        $classe = static::class;
-
-        // "App\Vehicules\Voiture" → "Voiture"
+        $classe = __CLASS__;
+        if (static::class !== $classe) {
+            $classe = static::class;
+        }
         $position = strrpos($classe, '\\');
 
         return $position === false ? $classe : substr($classe, $position + 1);
