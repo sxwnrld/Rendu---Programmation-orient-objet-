@@ -5,7 +5,7 @@ Projet PHP orienté objet réalisé en binôme.
 ## Auteurs
 
 - Ruben Sitbon
-- Sawwan [NOM DE FAMILLE À COMPLÉTER AVANT LE RENDU]
+- Sawwan Akrour
 
 ## Installation
 
@@ -121,7 +121,6 @@ Le projet a été exécuté avec PHP 8.1.2, sans dépendance, avec les erreurs P
 
 ## Avant le rendu GitHub
 
-- Compléter le nom de famille de Sawwan dans ce README.
 - Rejouer `php tests/run.php` et ouvrir la page dans l'environnement de rendu.
 - Vérifier les droits d'écriture du dossier `data/`.
 - Déposer les fichiers dans le dépôt du binôme et donner l'accès au formateur `yoanncoualan`, conformément au sujet. Cette archive ne modifie aucun dépôt à distance.
