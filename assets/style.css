@@ -133,7 +133,7 @@ body {
 
 .parc {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr));
     gap: 16px;
 }
 
@@ -213,4 +213,22 @@ body {
 .historique__vide {
     color: var(--texte-doux);
     list-style: none;
+}
+
+/* Les journaux et les adresses longues restent lisibles sur mobile. */
+.message, .historique, .locations {
+    overflow-wrap: anywhere;
+}
+
+.date-location {
+    color: var(--texte-doux);
+    font-size: 0.85rem;
+}
+
+@media (max-width: 540px) {
+    .page { padding: 24px 12px 40px; }
+    .page__entete h1 { font-size: 1.6rem; }
+    .etape { padding: 16px; }
+    .etape h2 { align-items: flex-start; }
+    .chiffre-cle { font-size: 1.7rem; }
 }
