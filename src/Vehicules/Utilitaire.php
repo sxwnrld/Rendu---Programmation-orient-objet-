@@ -82,7 +82,7 @@ class Utilitaire extends Vehicule implements Entretenable
      */
     public function setVolume(float $volume): static
     {
-        if ($volume <= 0) {
+        if (!is_finite($volume) || $volume <= 0) {
             throw new InvalidArgumentException('Le volume d\'un utilitaire doit être strictement positif.');
         }
 
