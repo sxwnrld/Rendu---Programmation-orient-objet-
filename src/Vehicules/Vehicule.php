@@ -248,7 +248,7 @@ abstract class Vehicule implements Louable
      */
     public function setTarifJournalier(float $tarifJournalier): static
     {
-        if ($tarifJournalier <= 0) {
+        if (!is_finite($tarifJournalier) || $tarifJournalier <= 0) {
             throw new InvalidArgumentException(sprintf(
                 'Tarif journalier invalide (%s) : il doit être strictement positif.',
                 $tarifJournalier
